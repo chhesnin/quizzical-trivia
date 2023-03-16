@@ -1,12 +1,15 @@
 import '../style/Quiz.scss';
 
 export default function Quiz({ quiz, handleSelect, isCheck }) {
-  function translate(content) {
+  function htmlToEscape(content) {
     return content
       .replace(/&quot;/g, '"')
       .replace(/&#039;/g, "'")
       .replace(/&Eacute;/g, 'é')
-      .replace(/&lrm;/g, '');
+      .replace(/&lrm;/g, '')
+      .replace(/&ldquo;/g, '“')
+      .replace(/&rdquo;/g, '”')
+      .replace(/&amp;/g, '&');
   }
   const answersElement = quiz.answers.map((answer) => {
     const getClassName = () => {
@@ -30,13 +33,13 @@ export default function Quiz({ quiz, handleSelect, isCheck }) {
         key={answer.id}
         type="button"
         onClick={() => handleSelect(quiz.id, answer.id)}>
-        <p>{translate(answer.value)}</p>
+        <p>{htmlToEscape(answer.value)}</p>
       </button>
     );
   });
   return (
     <div className="quiz">
-      <h3 className="question">{translate(quiz.question)}</h3>
+      <h3 className="question">{htmlToEscape(quiz.question)}</h3>
       <div className="answers">{answersElement}</div>
     </div>
   );

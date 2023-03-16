@@ -16,7 +16,7 @@ function App() {
   const [correctNum, setCorrectNum] = useState(0);
   // *紀錄遊戲次數
   const [playTimes, setPlayTimes] = useState(1);
-  // *紀錄loading緩衝時間
+  // *紀錄 loading 緩衝時間
   const [isLoading, setIsLoading] = useState(false);
   function startQuiz() {
     setIsStart(true);
@@ -26,7 +26,7 @@ function App() {
       .then((res) => res.json())
       .then((dataAPI) => {
         // *處理 API Data
-        const handleData = dataAPI.results.map((quiz) => {
+        const handledData = dataAPI.results.map((quiz) => {
           const incorrectAnswers = quiz.incorrect_answers.map((answer) => ({
             id: nanoid(),
             value: answer,
@@ -47,7 +47,7 @@ function App() {
             answers: allAnswers
           };
         });
-        setData(handleData);
+        setData(handledData);
       });
   }, [playTimes]);
   // ***處理選擇答案
@@ -62,7 +62,7 @@ function App() {
           const newStateOfQuiz = { ...quiz, answers: newStateOfAnswers };
           return newStateOfQuiz;
         }
-        // *若if{}有return, 則else{}不需存在, 可直接把內容放if(){}外
+        // *若 if{} 有 return, 則 else{} 不需存在, 可直接把內容放 if(){} 外
         return quiz;
       });
       return newStateOfData;
@@ -72,11 +72,12 @@ function App() {
   function checkAnswers() {
     setIsCheck(true);
     const onlyAnswers = data.map((quiz) => quiz.answers);
-    console.log(onlyAnswers);
     const correctAnswers = onlyAnswers.filter((answers) => {
-      const correctId = answers.find((answer) => answer.isCorrect).id;
-      const selectId = answers.find((answer) => answer.isSelect).id;
-      return correctId === selectId;
+      const isCorrect = answers.some((answer) => answer.isCorrect && answer.isSelect);
+      return isCorrect;
+      // const correctId = answers.find((answer) => answer.isCorrect).id;
+      // const selectId = answers.find((answer) => answer.isSelect).id;
+      // return correctId === selectId;
     });
     setCorrectNum(correctAnswers.length);
   }
